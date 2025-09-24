@@ -6,13 +6,13 @@ title() { echo -e "\n==> $1"; }
 # -------------------------------------------------
 # 0) Full systemoppdatering
 # -------------------------------------------------
-title "[0/9] Oppdaterer systemet"
+title "[0/11] Oppdaterer systemet"
 sudo apt update && sudo apt upgrade -y
 
 # -------------------------------------------------
-# 1) Forberedelser (APT-kilder og oppdatering)
+# 1) Forberedelser (APT-kilder)
 # -------------------------------------------------
-title "[1/9] Forberedelser"
+title "[1/11] Forberedelser"
 sudo dpkg --add-architecture i386 || true
 sudo add-apt-repository -y multiverse
 sudo apt update
@@ -20,7 +20,7 @@ sudo apt update
 # -------------------------------------------------
 # 2) Skjermdrivere / GPU + Vulkan
 # -------------------------------------------------
-title "[2/10] Setter opp GPU-drivere og Vulkan"
+title "[2/11] Setter opp GPU-drivere og Vulkan"
 sudo apt install -y ubuntu-drivers-common vulkan-tools libvulkan1
 
 GPU_INFO="$(lspci | egrep -i 'vga|3d|display' | tr '[:upper:]' '[:lower:]')"
@@ -49,18 +49,15 @@ else
 fi
 
 # -------------------------------------------------
-# 3) Verktøy som trengs for GNOME-porno
+# 3) GNOME "porno": tema/ikoner/cursor + tweaks
 # -------------------------------------------------
-title "[2/9] Installerer GNOME-verktøy og fonts (APT)"
+title "[3/11] GNOME ‘porno’: Orchis, Tela, Bibata, dark mode"
+
+# GNOME-verktøy
 sudo apt install -y \
   git curl wget unzip \
   gnome-tweaks gnome-shell-extensions gnome-shell-extension-manager \
   fonts-inter fonts-firacode
-
-# -------------------------------------------------
-# 4) GNOME "porno": tema/ikoner/cursor + tweaks
-# -------------------------------------------------
-title "[3/9] GNOME ‘porno’: Orchis, Tela, Bibata, dark mode"
 
 # Orchis (GTK + Shell)
 tmpdir="$(mktemp -d)"; pushd "$tmpdir" >/dev/null
@@ -107,31 +104,31 @@ gsettings set org.gnome.mutter center-new-windows true || true
 gsettings set org.gnome.desktop.interface enable-animations true || true
 
 # -------------------------------------------------
-# 5) Flathub
+# 4) Flathub
 # -------------------------------------------------
-title "[4/9] Setter opp Flathub"
+title "[4/11] Setter opp Flathub"
 sudo apt install -y flatpak gnome-software-plugin-flatpak
 if ! flatpak remotes | grep -qi flathub; then
   sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 fi
 
 # -------------------------------------------------
-# 6) Faste apper du bruker (APT)
+# 5) Faste apper du bruker (APT)
 # -------------------------------------------------
-title "[5/9] Installerer faste apper (APT)"
+title "[5/11] Installerer faste apper (APT)"
 sudo apt install -y vlc libreoffice neofetch
 
 # -------------------------------------------------
-# 7) Roy-apper via Flatpak
+# 6) Roy-apper via Flatpak
 # -------------------------------------------------
-title "[6/9] Roy-apper (Flatpak): Vesktop + Spotify"
+title "[6/11] Roy-apper (Flatpak): Vesktop + Spotify"
 flatpak install -y flathub dev.vencord.Vesktop
 flatpak install -y flathub com.spotify.Client
 
 # -------------------------------------------------
-# 8) Gaming
+# 7) Gaming
 # -------------------------------------------------
-title "[7/9] Gaming: Steam (APT) + Heroic/ProtonUp-Qt/Lutris/Bottles (Flatpak)"
+title "[7/11] Gaming: Steam (APT) + Heroic/ProtonUp-Qt/Lutris/Bottles (Flatpak)"
 sudo apt install -y gamemode mangohud steam
 flatpak install -y flathub com.heroicgameslauncher.hgl
 flatpak install -y flathub net.davidotek.pupgui2
@@ -139,15 +136,21 @@ flatpak install -y flathub net.lutris.Lutris
 flatpak install -y flathub com.usebottles.bottles
 
 # -------------------------------------------------
-# 9) Multimedia-codecs
+# 8) Multimedia-codecs
 # -------------------------------------------------
-title "[8/9] Installerer multimedia-codecs"
+title "[8/11] Installerer multimedia-codecs"
 sudo apt install -y ubuntu-restricted-extras || true
+
+# -------------------------------------------------
+# 9) Funny gimmick: Minecraft Launcher
+# -------------------------------------------------
+title "[9/11] Installerer Minecraft Launcher (PrismLauncher)"
+flatpak install -y flathub org.prismlauncher.PrismLauncher
 
 # -------------------------------------------------
 # 10) Etterarbeid
 # -------------------------------------------------
-title "[9/9] Etterarbeid"
+title "[10/11] Etterarbeid"
 cat <<'POST'
 — Ferdig! —
 
@@ -171,10 +174,14 @@ Anbefalt:
 
 5) Vesktop:
    Start “Vesktop” fra appmenyen og logg inn (Discord-konto).
+
+6) Minecraft:
+   Start “PrismLauncher” fra appmenyen, legg til din Mojang/Microsoft-konto,
+   og installer din første verden/modpack. 😎
 POST
 
 # -------------------------------------------------
 # 11) Vis systeminfo
 # -------------------------------------------------
-title "[10/10] Systeminfo"
+title "[11/11] Systeminfo"
 neofetch || echo "neofetch ikke funnet"
