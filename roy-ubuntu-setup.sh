@@ -49,51 +49,52 @@ else
 fi
 
 # -------------------------------------------------
-# 3) GNOME "porno": tema/ikoner/cursor + tweaks
+# 3) GNOME "porno": tema/ikoner/cursor + tweaks (ROBUST)
 # -------------------------------------------------
-title "[3/11] GNOME ‘porno’: Orchis, Tela, Bibata, dark mode"
+title "[3/11] GNOME ‘porno’: Orchis, Tela, Bibata (system-wide) + dark mode"
 
-# GNOME-verktøy
+# Verktøy
 sudo apt install -y \
   git curl wget unzip \
   gnome-tweaks gnome-shell-extensions gnome-shell-extension-manager \
   fonts-inter fonts-firacode
 
-# Orchis (GTK + Shell)
+# --- Orchis (GTK + Shell) system-wide ---
 tmpdir="$(mktemp -d)"; pushd "$tmpdir" >/dev/null
 git clone --depth=1 https://github.com/vinceliuice/Orchis-theme.git
-bash Orchis-theme/install.sh -d ~/.themes -t default -c dark -s
+# -d /usr/share/themes = system-wide
+sudo bash Orchis-theme/install.sh -d /usr/share/themes -t default -c dark -s
 popd >/dev/null; rm -rf "$tmpdir"
 
-# Tela ikoner
+# --- Tela ikoner system-wide ---
 tmpdir="$(mktemp -d)"; pushd "$tmpdir" >/dev/null
 git clone --depth=1 https://github.com/vinceliuice/Tela-icon-theme.git
-bash Tela-icon-theme/install.sh -d ~/.icons -a
+sudo bash Tela-icon-theme/install.sh -d /usr/share/icons -a
 popd >/dev/null; rm -rf "$tmpdir"
 
-# Bibata cursor
+# --- Bibata cursor system-wide ---
 tmpdir="$(mktemp -d)"; pushd "$tmpdir" >/dev/null
 git clone --depth=1 https://github.com/ful1e5/Bibata_Cursor.git
-mkdir -p ~/.icons
-cp -r Bibata_Cursor/* ~/.icons/
+sudo mkdir -p /usr/share/icons
+sudo cp -r Bibata_Cursor/* /usr/share/icons/
 popd >/dev/null; rm -rf "$tmpdir"
 
-# Enable User Themes
+# --- Aktiver User Themes (for GNOME Shell-tema) ---
+# NB: På Wayland må du logge ut/inn for at ny extension skal bite skikkelig.
 gnome-extensions enable user-theme@gnome-shell-extensions.gcampax.github.com || true
 
-# Utseende
+# --- Sett dark + tema/ikoner/cursor/fonts ---
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || true
 gsettings set org.gnome.desktop.interface gtk-theme 'Orchis-Dark' || true
 gsettings set org.gnome.shell.extensions.user-theme name 'Orchis-Dark' || true
 gsettings set org.gnome.desktop.interface icon-theme 'Tela' || true
 gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Ice' || true
 
-# Fonts
 gsettings set org.gnome.desktop.interface font-name 'Inter 11' || true
 gsettings set org.gnome.desktop.interface document-font-name 'Inter 11' || true
 gsettings set org.gnome.desktop.interface monospace-font-name 'FiraCode 11' || true
 
-# Dock + småjusteringer
+# --- Dock & småjusteringer (Ubuntu Dock/dash-to-dock) ---
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM' || true
 gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false || true
 gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'DYNAMIC' || true
@@ -102,6 +103,14 @@ gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize-or-
 gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 44 || true
 gsettings set org.gnome.mutter center-new-windows true || true
 gsettings set org.gnome.desktop.interface enable-animations true || true
+
+# --- Verifisering / debug-hint ---
+echo "Tema valgt:"
+echo " GTK  : $(gsettings get org.gnome.desktop.interface gtk-theme || true)"
+echo " Shell: $(gsettings get org.gnome.shell.extensions.user-theme name || true)"
+echo " Ikoner: $(gsettings get org.gnome.desktop.interface icon-theme || true)"
+echo " Cursor: $(gsettings get org.gnome.desktop.interface cursor-theme || true)"
+
 
 # -------------------------------------------------
 # 4) Flathub
