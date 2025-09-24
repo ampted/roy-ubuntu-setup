@@ -141,3 +141,9 @@ Anbefalt:
 5) Vesktop:
    Start “Vesktop” fra appmenyen og logg inn (Discord-konto).
 POST
+
+# -------------------------------------------------
+# 10) Vis systeminfo
+# -------------------------------------------------
+title "[10/10] Systeminfo"
+neofetch || echo "neofetch ikke funnet"
