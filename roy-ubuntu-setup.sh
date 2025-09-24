@@ -88,7 +88,7 @@ fi
 # 5) Faste apper du bruker (APT)
 # -------------------------------------------------
 title "[5/9] Installerer faste apper (APT)"
-sudo apt install -y vlc libreoffice fastfetch
+sudo apt install -y vlc libreoffice neofetch
 
 # -------------------------------------------------
 # 6) Roy-apper via Flatpak
